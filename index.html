@@ -4,7 +4,49 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>portfolio</title>
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Hero backdrop. Referenced from CSS, which the browser only discovers
+         after parsing the stylesheet, so preload it to avoid a late pop-in. -->
+    <link rel="preload" as="image" href="/computer1.jpg" fetchpriority="high" />
+
+    <!--
+      Applies the saved theme before first paint. Without this, the page
+      renders dark for a frame and then flips to light, which reads as a flash.
+      Runs synchronously and deliberately ahead of the module script.
+      Default is dark when nothing is stored.
+    -->
+    <script>
+      (function () {
+        var theme = 'dark'
+        try {
+          var stored = localStorage.getItem('portfolio-theme')
+          if (stored === 'light' || stored === 'dark') theme = stored
+        } catch (e) {
+          /* storage unavailable - keep the default */
+        }
+        document.documentElement.classList.add(theme)
+        document.documentElement.style.colorScheme = theme
+      })()
+    </script>
+
+    <!--
+      This is the fallback title only. Once the profile loads, HomePage
+      replaces it with the name and headline from the database.
+    -->
+    <title>Portfolio</title>
+    <meta
+      name="description"
+      content="Software engineer portfolio: projects, work experience, education and contact details."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Portfolio" />
+    <meta
+      property="og:description"
+      content="Software engineer portfolio: projects, work experience, education and contact details."
+    />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body>
     <div id="root"></div>

@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* Tailwind v4 keeps its design tokens here instead of a tailwind.config.js.
+   Each key below auto-generates utilities: bg-ink-950, text-accent-400,
+   animate-fade-up, and so on.
+
+   These are the DARK values (the default). The `html.light` block further
+   down redefines the same variables. Because v4 utilities compile to
+   `var(--color-...)`, overriding the variable flips every component at once -
+   no `dark:` variant needed on any individual element.
+
+   The ink scale is ordered by role, not by literal lightness:
+     ink-950 = page background      ink-300 = body text
+     ink-900 = cards                ink-100 = headings
+   so the scale inverts in light mode and the names still mean the same thing. */
+@theme {
+  --color-ink-950: oklch(0.17 0.015 258); /* page background */
+  --color-ink-900: oklch(0.21 0.017 258); /* cards, panels */
+  --color-ink-850: oklch(0.24 0.018 258); /* inputs */
+  --color-ink-800: oklch(0.29 0.018 258); /* borders */
+  --color-ink-700: oklch(0.38 0.016 258); /* hover borders */
+  --color-ink-400: oklch(0.64 0.014 258); /* muted text */
+  --color-ink-300: oklch(0.78 0.012 258); /* body text */
+  --color-ink-100: oklch(0.96 0.006 258); /* headings */
+
+  /* Single cyan accent */
+  --color-accent-300: oklch(0.87 0.1 200);
+  --color-accent-400: oklch(0.8 0.13 200);
+  --color-accent-500: oklch(0.72 0.15 200);
+  --color-accent-600: oklch(0.62 0.15 200);
+
+  /* Status colours, themed rather than hardcoded red-900/emerald-300 etc,
+     so they stay legible in both modes. */
+  --color-danger: oklch(0.78 0.11 25);
+  --color-danger-soft: oklch(0.28 0.07 25);
+  --color-danger-strong: oklch(0.62 0.17 25);
+  --color-success: oklch(0.82 0.13 160);
+  --color-warn: oklch(0.85 0.1 85);
+  --color-warn-soft: oklch(0.3 0.06 85);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---------------------------------------------------------------- light mode
+   Set by the inline script in index.html (before first paint, so there is no
+   flash) and toggled at runtime by useTheme. `html.light` has higher
+   specificity than the `:root` that @theme emits, so these win. */
+html.light {
+  --color-ink-950: oklch(0.99 0.002 258); /* page background */
+  --color-ink-900: oklch(0.975 0.004 258); /* cards, panels */
+  --color-ink-850: oklch(0.955 0.005 258); /* inputs */
+  --color-ink-800: oklch(0.885 0.007 258); /* borders */
+  --color-ink-700: oklch(0.78 0.009 258); /* hover borders */
+  --color-ink-400: oklch(0.47 0.013 258); /* muted text */
+  --color-ink-300: oklch(0.33 0.015 258); /* body text */
+  --color-ink-100: oklch(0.19 0.017 258); /* headings */
+
+  /* Darkened so cyan still passes contrast on a white background. */
+  --color-accent-300: oklch(0.52 0.13 205);
+  --color-accent-400: oklch(0.47 0.14 205);
+  --color-accent-500: oklch(0.43 0.15 205);
+  --color-accent-600: oklch(0.36 0.14 205);
+
+  --color-danger: oklch(0.47 0.17 25);
+  --color-danger-soft: oklch(0.96 0.025 25);
+  --color-danger-strong: oklch(0.55 0.2 25);
+  --color-success: oklch(0.45 0.13 160);
+  --color-warn: oklch(0.42 0.1 75);
+  --color-warn-soft: oklch(0.96 0.04 85);
+}
+
+/* ------------------------------------------------------- hero backdrop
+   Decorative photo behind the hero. Kept in CSS rather than as a Tailwind
+   arbitrary `bg-[url(...)]` so the per-theme opacity lives next to the rest
+   of the theming.
+
+   The photo is dimmed and then covered by a gradient wash (see
+   HeroSection.tsx) so the name and tagline keep >= 4.5:1 contrast.
+
+   These opacities are tuned to THIS image, measured rather than guessed:
+   computer1.jpg is dark (mean relative luminance 0.033; the brightest pixel
+   anywhere behind the text band is 0.504), which leaves room to show it at a
+   fairly high opacity and still clear WCAG AA. Light mode needs a fainter
+   photo, because it washes out against a near-white page instead of
+   darkening against a near-black one.
+
+   If you swap in a brighter image, re-check the hero text contrast - a photo
+   with near-white areas behind the text would need the top gradient stop in
+   HeroSection.tsx raised from 75% to about 81%. */
+.hero-photo {
+  background-image: url("/computer1.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.45;
+}
+
+html.light .hero-photo {
+  opacity: 0.18;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Keeps section headings clear of the sticky nav when jumping to an anchor */
+  scroll-padding-top: 5.5rem;
+  background-color: var(--color-ink-950);
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-ink-950);
+  color: var(--color-ink-300);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* Theme switches should not feel like a hard cut. */
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Visible focus ring everywhere, for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-accent-400);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Reveal-on-scroll: hidden until the IntersectionObserver marks it visible.
+   Elements never observed (e.g. JS disabled) stay visible by default. */
+.reveal {
+  opacity: 0;
+}
+.reveal-visible {
+  animation: var(--animate-fade-up);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

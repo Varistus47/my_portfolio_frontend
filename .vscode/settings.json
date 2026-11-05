@@ -1,0 +1,6 @@
+{
+  "//": "Tailwind v4 puts its config in CSS (@theme, @apply, @reference). The built-in CSS language service does not know these at-rules, so it reports false 'Unknown at rule' warnings. Tailwind's Vite plugin compiles them fine.",
+  "css.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore"
+}
