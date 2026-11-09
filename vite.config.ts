@@ -23,5 +23,6 @@ export default defineConfig(({ mode }) => {
         '/uploads': { target, changeOrigin: true },
       },
     },
+    base:process.env.VITE_BASE_PATH || "/my_portfolio_frontend",
   }
 })

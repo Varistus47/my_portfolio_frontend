@@ -25,4 +25,6 @@ dist-ssr
 *.sw?
 
 # Local env overrides
+.env
+.env.*
 .env.local
