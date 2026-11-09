@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
+import checker from 'vite-plugin-checker' 
 
 // Dev proxy target. Override with VITE_API_PROXY_TARGET in .env.local if the
 // backend runs on a different port.
@@ -13,7 +14,9 @@ export default defineConfig(({ mode }) => {
   const target = env.VITE_API_PROXY_TARGET || DEFAULT_TARGET
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(),checker({
+        typescript: true,
+      }),],
     server: {
       port: 5173,
       proxy: {
